@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <h2>Create Account</h2>
+        <p class="sub-text">Start your journey...</p>
+        <form action="/signup" method="post">
+                {% if error %}
+                <p class="sub-text" style="color: red;">{{ error }}</p>
+                {% endif %}
+            <input type="email" name="email" placeholder="Enter your email here..." value="{{ email or '' }}" required>
+            <input type="password" name="password" placeholder="Enter your password here..." required>
+            <p class="sub-text">Already have an account? <a href="/login">Login</a></p>
+            <button type="submit">Sign Up</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

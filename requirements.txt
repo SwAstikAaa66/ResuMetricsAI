@@ -1,0 +1,7 @@
+Flask>=2.0
+SQLAlchemy>=1.4
+pymysql
+python-dotenv
+gunicorn
+PyPDF2
+python-docx

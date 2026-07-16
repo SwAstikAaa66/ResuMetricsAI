@@ -1,0 +1,35 @@
+.venv/
+venv/
+__pycache__/
+*.pyc
+.env
+.DS_Store
+.vscode/
+.idea/
+*.log
+static/*.css
+tempCodeRunnerFile.py
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.sqlite3
+
+# Environment
+.env
+.venv/
+venv/
+env/
+
+# Editor
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

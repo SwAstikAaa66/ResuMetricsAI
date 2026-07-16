@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Your History</h2>
+{% for report in reports %}
+    <div class="card">
+        <p><strong>Resume Preview:</strong></p>
+        <h3>Resume Analyzer</h3>
+        <p>Role: {{ report.role }}</p>
+        <p>Skills: {{ report.skills }}</p>
+        <p>Missing Skills: {{ report.missing_skills }}</p>
+        <p>Roadmap: {{ report.roadmap }}</p>
+        <p>Interview Questions: {{ report.interview_questions }}</p>
+    </div>
+{% else %}
+    <p>No history yet.</p>
+{% endfor %}
+{% endblock %}

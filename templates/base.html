@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ResuMetrics AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <a href="/">HOME</a>
+                {% if session.get('user_id') %}
+                    <a href="/dashboard">DASHBOARD</a>
+                    <a href="/history">HISTORY</a>
+                    <a href="/logout">LOGOUT</a>
+                {% else %}
+                    <a href="/login">LOGIN</a>
+                    <a href="/signup">SIGN UP</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+    <main class="container">
+        {% block content %}
+        <section class="hero">
+            <h1>ResuMetrics AI</h1>
+            <p>Manage your resume submissions, track progress, and review your history from one place.</p>
+            <div class="hero-actions">
+                <a href="/login">Login</a>
+                <a href="/signup">Create Account</a>
+                <a href="/dashboard">Open Dashboard</a>
+            </div>
+        </section>
+        {% endblock %}
+    </main>
+    <footer>
+        <p>@ResuMetrics AI 2026</p>
+    </footer>
+</body>
+</html>
