@@ -2,16 +2,20 @@
 {% block content %}
 <h2>Your History</h2>
 {% for report in reports %}
-    <div class="card">
-        <p><strong>Resume Preview:</strong></p>
-        <h3>Resume Analyzer</h3>
-        <p>Role: {{ report.role }}</p>
-        <p>Skills: {{ report.skills }}</p>
-        <p>Missing Skills: {{ report.missing_skills }}</p>
-        <p>Roadmap: {{ report.roadmap }}</p>
-        <p>Interview Questions: {{ report.interview_questions }}</p>
+    {% set result = report.payload %}
+    <div class="card history-card">
+        <div class="history-top">
+            <strong>Role</strong>
+            <span>{{ result.get('role', 'Professional') }}</span>
+        </div>
+        <p><strong>Overall score:</strong> {{ result.get('overall_score', 'N/A') }}</p>
+        <p><strong>Skills:</strong> {{ ', '.join(result.get('Skills', [])) if result.get('Skills') else 'N/A' }}</p>
+        <p><strong>Missing skills:</strong> {{ ', '.join(result.get('MissingSkills', [])) if result.get('MissingSkills') else 'N/A' }}</p>
+        <p><strong>Roadmap:</strong> {{ '; '.join(result.get('Roadmap', [])) if result.get('Roadmap') else 'N/A' }}</p>
     </div>
 {% else %}
-    <p>No history yet.</p>
+    <div class="card empty-state">
+        <p>No history yet. Run your first resume analysis from the dashboard.</p>
+    </div>
 {% endfor %}
 {% endblock %}

@@ -8,7 +8,9 @@ __pycache__/
 .idea/
 *.log
 static/*.css
-tempCodeRunnerFile.py
+tempCodeRunnerFile.pygit remote set-url origin https://github.com/SwAstikAaa66/ResuMetricsAI.git
+git remote -v
+git push -u origin master
 
 # Python
 __pycache__/
@@ -16,6 +18,7 @@ __pycache__/
 *.pyo
 *.pyd
 *.sqlite3
+*.db
 
 # Environment
 .env

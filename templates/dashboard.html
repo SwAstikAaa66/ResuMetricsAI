@@ -1,49 +1,198 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Welcome, {{ user.name }}</h2>
-<div class="card">
-    <h3>Resume Analyzer</h3>
-    <form method="post" enctype="multipart/form-data">
-        <textarea name="resume" placeholder="Paste your resume here..."></textarea>
-        <p>Or upload a file:</p>
-        <input type="file" name="resume_file" accept=".pdf,.doc,.docx">
-        <input type="text" name="role" placeholder="What do you want to become? [e.g. Backend Developer, Data Scientist]" required>
-        <button type="submit">Analyze Resume</button>
-    </form>
-</div>
-{% if result %}
-<div class="red">
-    {% if result.error %}
-    <p style="color: red;">Error: {{ result.error }}</p>
-    {% endif %}
+<section class="dashboard-shell">
+    <div class="row g-4 align-items-start">
+        <div class="col-lg-5">
+            <div class="card dashboard-card">
+                <div class="section-head">
+                    <span class="eyebrow">Resume Analyzer</span>
+                    <h2>Welcome, {{ user.name }}</h2>
+                </div>
+                <form method="post" enctype="multipart/form-data" class="analysis-form">
+                    <textarea name="resume" placeholder="Paste your resume here..."></textarea>
+                    <div class="upload-field">
+                        <label>Upload resume file</label>
+                        <input type="file" name="resume_file" accept=".pdf,.doc,.docx">
+                    </div>
+                    <input type="text" name="role" placeholder="Target role, e.g. Backend Engineer or Data Analyst" required>
+                    <button type="submit" class="btn-primary">
+                        <span class="button-text">Analyze Resume</span>
+                        <span class="spinner d-none" aria-hidden="true"></span>
+                    </button>
+                </form>
+            </div>
+        </div>
 
-    <h3>Skills</h3>
-    <ul>
-        {% for s in result.get("Skills", []) %}
-        <li>{{ s }}</li>
-        {% endfor %}
-    </ul>
+        <div class="col-lg-7">
+            {% if result %}
+            <div class="result-panel">
+                {% if result.get("error") %}
+                <div class="alert-error">{{ result.get("error") }}</div>
+                {% else %}
+                <div class="score-card">
+                    <div>
+                        <span class="eyebrow">Overall match</span>
+                        <h3>{{ result.get("overall_score", 0) }} / 100</h3>
+                    </div>
+                    <div class="score-pill">{{ result.get("role", "Professional") }}</div>
+                </div>
+                {% endif %}
 
-    <h3>Missing Skills</h3>
-    <ul>
-        {% for s in result.get("MissingSkills", []) %}
-        <li>{{ s }}</li>
-        {% endfor %}
-    </ul>
+                <div class="result-grid">
+                    <div class="result-card">
+                        <h4>Skills</h4>
+                        <ul>
+                            {% for s in result.get("Skills", []) %}
+                            <li>{{ s }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
 
-    <h3>Roadmap</h3>
-    <ul>
-        {% for s in result.get("Roadmap", []) %}
-        <li>{{ s }}</li>
-        {% endfor %}
-    </ul>
+                    <div class="result-card">
+                        <h4>Missing Skills</h4>
+                        <ul>
+                            {% for s in result.get("MissingSkills", []) %}
+                            <li>{{ s }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
 
-    <h3>Interview Questions</h3>
-    <ul>
-        {% for s in result.get("InterviewQuestions", []) %}
-        <li>{{ s }}</li>
-        {% endfor %}
-    </ul>
-</div>
-{% endif %}
+                    <div class="result-card full-width">
+                        <h4>Roadmap</h4>
+                        <ul>
+                            {% for s in result.get("Roadmap", []) %}
+                            <li>{{ s }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <div class="result-card full-width">
+                        <h4>Interview Questions</h4>
+                        <ul>
+                            {% for s in result.get("InterviewQuestions", []) %}
+                            <li>{{ s }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row g-4 mt-1 dashboard-side-panels">
+        <div class="col-lg-6">
+            <div class="card mini-panel">
+                <div class="section-head compact">
+                    <span class="eyebrow">Follow-up Q&A</span>
+                    <h3>Ask the recruiter lens</h3>
+                </div>
+                <form id="followup-form" class="stacked-form">
+                    <textarea name="question" placeholder="Ask: How should I talk about my backend projects, SQL skills, or career pivot?"></textarea>
+                    <input type="text" name="role" placeholder="Role context (optional)">
+                    <textarea name="resume_text" placeholder="Paste the same resume text or a brief summary here"></textarea>
+                    <button type="submit">Get suggestions</button>
+                </form>
+                <div id="followup-output" class="result-box hidden"></div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card mini-panel">
+                <div class="section-head compact">
+                    <span class="eyebrow">LinkedIn Review</span>
+                    <h3>Profile polish</h3>
+                </div>
+                <form id="linkedin-form" class="stacked-form" enctype="multipart/form-data">
+                    <input type="url" name="profile_url" placeholder="LinkedIn profile URL">
+                    <div class="upload-field">
+                        <label>Or upload a profile PDF</label>
+                        <input type="file" name="profile_file" accept=".pdf,.txt,.docx">
+                    </div>
+                    <button type="submit">Review Profile</button>
+                </form>
+                <div id="linkedin-output" class="result-box hidden"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const forms = document.querySelectorAll('.analysis-form');
+    forms.forEach(function (form) {
+      form.addEventListener('submit', function () {
+        const button = form.querySelector('button[type="submit"]');
+        const spinner = form.querySelector('.spinner');
+        const text = form.querySelector('.button-text');
+        if (button && spinner && text) {
+          button.disabled = true;
+          text.textContent = 'Analyzing...';
+          spinner.classList.remove('d-none');
+        }
+      });
+    });
+
+    function renderList(target, items) {
+      if (!target) return;
+      if (!items || !items.length) {
+        target.innerHTML = '<p>No suggestions available yet.</p>';
+        return;
+      }
+      target.innerHTML = '<ul>' + items.map(item => '<li>' + item + '</li>').join('') + '</ul>';
+    }
+
+    const followupForm = document.getElementById('followup-form');
+    const followupOutput = document.getElementById('followup-output');
+    if (followupForm && followupOutput) {
+      followupForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        const formData = new FormData(followupForm);
+        fetch('/followup', { method: 'POST', body: formData })
+          .then(response => response.json())
+          .then(data => {
+            if (data.status === 'error') {
+              followupOutput.classList.remove('hidden');
+              followupOutput.innerHTML = '<p class="error-text">' + (data.message || 'Unable to generate suggestions.') + '</p>';
+              return;
+            }
+            followupOutput.classList.remove('hidden');
+            const suggestions = data.suggestions || [];
+            followupOutput.innerHTML = '<h4>' + (data.role || 'Career') + '</h4><p>' + (data.summary || '') + '</p>';
+            renderList(followupOutput, suggestions);
+          })
+          .catch(() => {
+            followupOutput.classList.remove('hidden');
+            followupOutput.innerHTML = '<p class="error-text">Unable to generate follow-up suggestions.</p>';
+          });
+      });
+    }
+
+    const linkedinForm = document.getElementById('linkedin-form');
+    const linkedinOutput = document.getElementById('linkedin-output');
+    if (linkedinForm && linkedinOutput) {
+      linkedinForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        const formData = new FormData(linkedinForm);
+        fetch('/linkedin_review', { method: 'POST', body: formData })
+          .then(response => response.json())
+          .then(data => {
+            if (data.status === 'error') {
+              linkedinOutput.classList.remove('hidden');
+              linkedinOutput.innerHTML = '<p class="error-text">' + (data.message || 'Unable to review profile.') + '</p>';
+              return;
+            }
+            linkedinOutput.classList.remove('hidden');
+            linkedinOutput.innerHTML = '<h4>' + (data.headline || 'Profile headline') + '</h4>' +
+              '<p><strong>Skills:</strong> ' + (Array.isArray(data.skills) ? data.skills.join(', ') : '') + '</p>';
+            renderList(linkedinOutput, data.suggestions || []);
+          })
+          .catch(() => {
+            linkedinOutput.classList.remove('hidden');
+            linkedinOutput.innerHTML = '<p class="error-text">Unable to review LinkedIn profile.</p>';
+          });
+      });
+    }
+  });
+</script>
 {% endblock %}

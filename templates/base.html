@@ -4,9 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ResuMetrics AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
+    <div class="cursor-spark-container" aria-hidden="true"></div>
     <header>
         <div class="container">
             <nav>
@@ -25,8 +30,13 @@
     <main class="container">
         {% block content %}
         <section class="hero">
+            <div class="hero-badges">
+                <span>AI role-fit</span>
+                <span>Fast feedback</span>
+                <span>Portfolio-ready roadmap</span>
+            </div>
             <h1>ResuMetrics AI</h1>
-            <p>Manage your resume submissions, track progress, and review your history from one place.</p>
+            <p>Turn your résumé into a sharper story, with instant feedback, role-based insights, and a clear path to interview confidence.</p>
             <div class="hero-actions">
                 <a href="/login">Login</a>
                 <a href="/signup">Create Account</a>
@@ -35,6 +45,24 @@
         </section>
         {% endblock %}
     </main>
+    <script>
+        document.addEventListener('mousemove', function (event) {
+            const container = document.querySelector('.cursor-spark-container');
+            if (!container) return;
+
+            for (let i = 0; i < 2; i += 1) {
+                const spark = document.createElement('span');
+                spark.className = 'cursor-spark';
+                spark.style.left = `${event.clientX + (Math.random() * 12 - 6)}px`;
+                spark.style.top = `${event.clientY + (Math.random() * 12 - 6)}px`;
+                spark.style.setProperty('--spark-size', `${Math.random() * 10 + 6}px`);
+                spark.style.setProperty('--spark-delay', `${Math.random() * 400}ms`);
+                container.appendChild(spark);
+
+                setTimeout(() => spark.remove(), 650);
+            }
+        });
+    </script>
     <footer>
         <p>@ResuMetrics AI 2026</p>
     </footer>
