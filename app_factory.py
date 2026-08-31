@@ -11,7 +11,7 @@ def create_app(test_config=None):
     if test_config:
         app.config.update(test_config)
 
-    app.secret_key = app.config.get("SECRET_KEY", "dev-secret-key")
+    app.secret_key = app.config.get("SECRET_KEY") or "change-me-in-production"
     Base.metadata.create_all(bind=engine)
     app.register_blueprint(main_bp)
     return app

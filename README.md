@@ -20,13 +20,23 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-3. Create a `.env` file with your configuration (optional)
+3. Copy the example environment file and fill in your own values
+
+```bash
+copy .env.example .env
+```
+
+Example:
 
 ```
-DATABASE_URL=mysql+pymysql://user:pass@host:3306/dbname
+SECRET_KEY=change-me-in-production
+DATABASE_URL=sqlite:///resumetrics.db
 ANALYZER_URL=
 ANALYZER_API_KEY=
+GEMINI_API_KEY=
 ```
+
+> Store real secrets in your local `.env` file or in your hosting platform's secret manager. Never commit credentials to Git.
 
 4. Run the app
 
@@ -66,7 +76,16 @@ git push -u origin main
 
 A minimal GitHub Actions workflow is included at `.github/workflows/ci.yml` to run a quick import test.
 
+## Security
+
+⚠️ **Important**: Never commit `.env` or secrets to Git. The `.env` file is listed in `.gitignore` and should only exist locally. Use `.env.example` as a template for required keys.
+
+For production:
+- Set environment variables in your hosting platform (Render, Railway, etc.)
+- Use a secret manager (AWS Secrets Manager, HashiCorp Vault, etc.)
+- Rotate credentials immediately if they are ever exposed
+
 ## Notes
 
-- Keep secrets out of source control; use the host's environment variables or the platform's secret config.
 - For heavy/slow analysis, consider background jobs (RQ/Celery) and a job status UI.
+- All database connections use environment variables only—no hardcoded credentials.

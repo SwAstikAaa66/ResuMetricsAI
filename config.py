@@ -6,7 +6,7 @@ load_dotenv()
 
 
 class Config:
-    SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-key")
+    SECRET_KEY = os.getenv("SECRET_KEY", "change-me-in-production")
     DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///resumetrics.db")
     ANALYZER_URL = os.getenv("ANALYZER_URL", "")
     ANALYZER_API_KEY = os.getenv("ANALYZER_API_KEY", "")

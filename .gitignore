@@ -1,17 +1,3 @@
-.venv/
-venv/
-__pycache__/
-*.pyc
-.env
-.DS_Store
-.vscode/
-.idea/
-*.log
-static/*.css
-tempCodeRunnerFile.pygit remote set-url origin https://github.com/SwAstikAaa66/ResuMetricsAI.git
-git remote -v
-git push -u origin master
-
 # Python
 __pycache__/
 *.py[cod]
@@ -22,6 +8,8 @@ __pycache__/
 
 # Environment
 .env
+.env.*
+!.env.example
 .venv/
 venv/
 env/
@@ -36,3 +24,6 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Static assets
+static/*.css
