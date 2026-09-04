@@ -72,18 +72,6 @@ git remote add origin git@github.com:youruser/yourrepo.git
 git push -u origin main
 ```
 
-## CI
-
-A minimal GitHub Actions workflow is included at `.github/workflows/ci.yml` to run a quick import test.
-
-## Security
-
-⚠️ **Important**: Never commit `.env` or secrets to Git. The `.env` file is listed in `.gitignore` and should only exist locally. Use `.env.example` as a template for required keys.
-
-For production:
-- Set environment variables in your hosting platform (Render, Railway, etc.)
-- Use a secret manager (AWS Secrets Manager, HashiCorp Vault, etc.)
-- Rotate credentials immediately if they are ever exposed
 
 ## Notes
 
